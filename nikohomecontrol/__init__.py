@@ -39,7 +39,7 @@ class NikoHomeControl:
 
     def _command(self, cmd):
         self._socket.send(cmd.encode())
-        data = json.load(StringIO(self._socket.recv(1024).decode()))
+        data = json.load(StringIO(self._socket.recv(4096).decode()))
 
         if ('error' in data['data'] and data['data']['error'] > 0):
             error = json['data']['error']
