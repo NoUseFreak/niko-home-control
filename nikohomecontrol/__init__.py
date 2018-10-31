@@ -6,17 +6,14 @@
     :synopsis: Python API to interact with Niko Home Control
     :noindex:
 '''
-
-import socket
 import json
-from io import StringIO
+import nclib
 
 class NikoHomeControl:
 
     def __init__(self, config):
         self._config = config
-        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.connect((config['ip'], config['port']))
+        self._socket = nclib.Netcat((config['ip'], config['port']), udp=False)
 
     def __del__(self):
         self._socket.shutdown(1)
@@ -39,8 +36,7 @@ class NikoHomeControl:
 
     def _command(self, cmd):
         self._socket.send(cmd.encode())
-        data = json.load(StringIO(self._socket.recv(4096).decode()))
-
+        data = json.loads(self._socket.recv_until(b'\r'))
         if ('error' in data['data'] and data['data']['error'] > 0):
             error = json['data']['error']
             if (error == 100):
