@@ -34,6 +34,13 @@ class NikoHomeControl:
     def execute_actions(self, id, value):
         return self._command('{"cmd":"executeactions", "id": "'+id+'", "value": "'+value+'"}')
 
+    def item_state(self, id):
+        data = self.list_actions()['data']
+        for index, item in enumerate(data):
+            if 'id' in item and str(item['id']) == str(id):
+                return item
+        return False
+
     def _command(self, cmd):
         self._socket.send(cmd.encode())
         data = json.loads(self._socket.recv_until(b'\r'))
