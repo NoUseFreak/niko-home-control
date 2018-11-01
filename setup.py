@@ -1,6 +1,6 @@
-from setuptools import setup
+import setuptools
 
-setup(
+setuptools.setup(
     name='niko-home-control',
     description='SDK for Niko Home Control',
     license='MIT',
@@ -11,7 +11,7 @@ setup(
     maintainer='Dries De Peuter',
     maintainer_email='dries@nousefreak.be',
     long_description='',
-    packages=["nikohomecontrol"],
+    packages=setuptools.find_packages(),
     zip_safe=False,
     classifiers=[
         "License :: OSI Approved :: MIT License",
