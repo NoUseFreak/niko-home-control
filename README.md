@@ -55,3 +55,11 @@ Setting up a monitor to listening to your Niko Home Control system is easy as:
 monitor = NikoHomeControlMonitor(ip: '192.168.22.105', port:8000)
 monitor.listen()
 ````
+
+# License
+
+(https://opensource.org/licenses/MIT)[MIT] Author: Dries De Peuter
+
+# Contributors
+
+* (https://github.com/legovaer)[Levi Govaerts]
