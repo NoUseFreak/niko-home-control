@@ -39,7 +39,7 @@ class NikoHomeControl:
     def _command(self, cmd):
         data = json.loads(self.connection.send(cmd))
         if 'error' in data['data'] and data['data']['error'] > 0:
-            error = json['data']['error']
+            error = data['data']['error']
             if error == 100:
                 raise ActionError('NOT_FOUND')
             if error == 200:
