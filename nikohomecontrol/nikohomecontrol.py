@@ -34,7 +34,7 @@ class NikoHomeControl:
         return self._command('{"cmd":"listlocations"}')
 
     def execute_actions(self, id, value):
-        return self._command('{"cmd":"executeactions", "id": "'+id+'", "value": "'+value+'"}')
+        return self._command('{"cmd":"executeactions", "id": "'+id+'", "value1": "'+value+'"}')
 
     def _command(self, cmd):
         data = json.loads(self.connection.send(cmd))
