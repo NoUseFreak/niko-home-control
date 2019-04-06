@@ -1,2 +1,4 @@
 setuptools==39.2.0
 nclib==0.8.2
+netaddr==0.7.19
+netifaces==0.10.9

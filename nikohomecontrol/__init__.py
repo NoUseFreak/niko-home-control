@@ -15,3 +15,7 @@ from .nhcmonitor import (
     NikoHomeControlMonitor,
     listen
 )
+
+from .nhcdiscover import (
+    NikoHomeControlDiscover
+)

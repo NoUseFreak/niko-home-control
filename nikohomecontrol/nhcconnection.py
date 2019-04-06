@@ -17,7 +17,7 @@ __version__ = '0.1'
 
 import nclib
 
-NHC_TCP_PORT = "8000"
+NHC_TCP_PORT = 8000
 NHC_TIMEOUT = 20000
 
 

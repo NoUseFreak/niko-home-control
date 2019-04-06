@@ -11,15 +11,20 @@ import json
 from . import nhcconnection
 
 
-class NikoHomeControlException(Exception): pass
-class ActionError(NikoHomeControlException): pass
+class NikoHomeControlException(Exception):
+    pass
+
+
+class ActionError(NikoHomeControlException):
+    pass
 
 
 class NikoHomeControl:
 
     def __init__(self, config):
         self._config = config
-        self.connection = nhcconnection.NikoHomeControlConnection(config['ip'], config['port'])
+        self.connection = nhcconnection.NikoHomeControlConnection(
+            config['ip'], config['port'])
 
     def system_info(self):
         return self._command('{"cmd":"systeminfo"}')
