@@ -33,7 +33,7 @@ class NikoHomeControl:
         return self._command('{"cmd":"listactions"}')
 
     def list_actions(self):
-        return [Action(action, self) for action in self.list_actions_raw()])
+        return [Action(action, self) for action in self.list_actions_raw()]
 
     def list_energy(self):
         return self._command('{"cmd":"listenergy"}')
@@ -45,7 +45,7 @@ class NikoHomeControl:
         return [Location(location) for location in self.list_locations_raw()]
 
     def execute_actions(self, id, value):
-        return self._command('{"cmd":"executeactions", "id": "'+id+'", "value1": "'+value+'"}')
+        return self._command('{"cmd":"executeactions", "id": "'+str(id)+'", "value1": "'+str(value)+'"}')
 
     def _command(self, cmd):
         data = json.loads(self.connection.send(cmd))
@@ -58,7 +58,7 @@ class NikoHomeControl:
             if error == 300:
                 raise ActionError('ERROR')
 
-        return data
+        return data['data']
 
 class Location:
     def __init__(self, location):
@@ -114,10 +114,10 @@ def list():
         'timeout': 2000,
         'events': True
     })
-    print(niko.system_info())
-    print(niko.list_locations())
-    print(niko.list_energy())
-    print(niko.list_actions())
+    # print(niko.system_info())
+    # print(niko.list_locations())
+    # print(niko.list_energy())
+    print(niko.list_actions_raw())
 
 if __name__ == '__main__':
     list()
