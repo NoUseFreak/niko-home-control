@@ -114,9 +114,9 @@ def list():
         'timeout': 2000,
         'events': True
     })
-    # print(niko.system_info())
-    # print(niko.list_locations())
-    # print(niko.list_energy())
+    print(niko.system_info())
+    print(niko.list_locations())
+    print(niko.list_energy())
     print(niko.list_actions_raw())
 
 if __name__ == '__main__':
