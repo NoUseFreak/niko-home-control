@@ -5,7 +5,7 @@ setuptools.setup(
     description='SDK for Niko Home Control',
     license='MIT',
     url='https://github.com/NoUseFreak/niko-home-control',
-    version='0.2.1',
+    version='0.2.2',
     author='Dries De Peuter',
     author_email='dries@nousefreak.be',
     maintainer='Dries De Peuter',
