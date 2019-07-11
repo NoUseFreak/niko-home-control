@@ -45,6 +45,7 @@ print(niko.system_info())
 print(niko.list_locations())
 print(niko.list_energy())
 print(niko.list_actions())
+print(niko.list_thermostats())
 ```
 
 ### Niko Home Control Monitor
