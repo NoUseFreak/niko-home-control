@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Check out the action locally
         uses: actions/checkout@v3
-        with:
-          path: test
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
