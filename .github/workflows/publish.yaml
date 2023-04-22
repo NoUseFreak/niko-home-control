@@ -11,6 +11,18 @@ jobs:
     permissions:
       id-token: write
     steps:
+      - name: Check out the action locally
+        uses: actions/checkout@v3
+        with:
+          path: test
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install the packaging-related tools
+        run: python3 -m pip install build setuptools
+      - name: Create package 
+        run: python3 -m build --sdist --wheel --outdir dist/
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
