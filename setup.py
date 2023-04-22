@@ -10,7 +10,7 @@ setuptools.setup(
     author_email='dries@nousefreak.be',
     maintainer='Dries De Peuter',
     maintainer_email='dries@nousefreak.be',
-    long_description='',
+    long_description='Niko Home Control Client Library',
     packages=setuptools.find_packages(),
     zip_safe=False,
     install_requires=['nclib', 'netaddr', 'netifaces'],
