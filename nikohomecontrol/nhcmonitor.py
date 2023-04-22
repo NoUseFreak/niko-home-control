@@ -33,6 +33,18 @@ class NikoHomeControlMonitor:
             elif not data.isspace():
                 print(json.loads(json.dumps(data)))
 
+    def callback(self, cb):
+        logging.info('Now listening for incoming TCP traffic ...')
+        self.connection.send('{"cmd":"startevents"}')
+        while True:
+            data = self.connection.receive()
+            if not data:
+                break
+            elif not data.isspace():
+                d = json.loads(data)
+                for item in d['data']:
+                    cb(item)
+
 
 # ---------------------------------------------------------
 # terminal-output:
