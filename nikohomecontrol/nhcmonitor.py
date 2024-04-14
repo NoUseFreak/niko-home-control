@@ -4,81 +4,79 @@
 """
 nhcmonitor.py
 
-Implement a tkinter-based grafic interface to view basic status- and
-traffic-informations.
+asyncio-based event monitor for Niko Home Control
 
-License: MIT https://opensource.org/licenses/MIT
-Source: https://github.com/NoUseFreak/niko-home-control
-Author: Levi Govaerts <legovaer@me.com>
+Author: Jeroen Vaes
 """
 
-import logging
+import asyncio
 import json
-import argparse
 
-from . import nhcconnection
+class Event:
+    def __init__(self, type, data):
+        self.type = type
+        self._state = data
 
+    @property
+    def id(self):
+        return self._state['id']
+
+    @property
+    def value1(self):
+        return self._state['value1']
+
+    @property
+    def value2(self):
+        return self._state['value2']
 
 class NikoHomeControlMonitor:
-    def __init__(self, ip, port=nhcconnection.NHC_TCP_PORT):
-        self.connection = nhcconnection.NikoHomeControlConnection(ip, port)
+    @classmethod
+    async def create(cls, ip, port):
+        self = NikoHomeControlMonitor()
+        self._callback = []
+        self._reader, self._writer = await asyncio.open_connection(ip, port)
 
-    def listen(self):
-        logging.info('Now listening for incoming TCP traffic ...')
-        self.connection.send('{"cmd":"startevents"}')
-        while True:
-            data = self.connection.receive()
-            if not data:
-                break
-            elif not data.isspace():
-                print(json.loads(json.dumps(data)))
+        return self
 
-    def callback(self, cb):
-        logging.info('Now listening for incoming TCP traffic ...')
-        self.connection.send('{"cmd":"startevents"}')
-        while True:
-            data = self.connection.receive()
-            if not data:
-                break
-            elif not data.isspace():
-                d = json.loads(data)
-                for item in d['data']:
-                    cb(item)
+    def add_callback(self, func):
+        self._callback.append(func)
 
+    async def _listen(self):
+        """Listen for events."""
+        s = '{"cmd":"startevents"}'
 
-# ---------------------------------------------------------
-# terminal-output:
-# ---------------------------------------------------------
-def listen(ip, port=nhcconnection.NHC_TCP_PORT):
-    print('\nNiko Home Control monitor:')
-    NikoHomeControlMonitor(ip, port).listen()
+        self._writer.write(s.encode())
+        await self._writer.drain()
 
+        async for line in self._reader:
+            try:
+                message = json.loads(line.decode())
+                if "event" in message and message["event"] == "listactions":
+                    event = Event(message["event"], message["data"])
+                    for data in message["data"]:
+                        event = Event(message["event"], data)
+                        for func in self._callback:
+                            await func(event)
+            except Exception as e:
+                print(e)
+    
+    def start_listener(self):
+        self._listen_task = asyncio.create_task(self._listen())
 
-# ---------------------------------------------------------
-# cli-section:
-# ---------------------------------------------------------
-def _get_cli_arguments():
-    parser = argparse.ArgumentParser(description='Niko Home Control Monitor')
-    parser.add_argument('-i', '--ip-address',
-                        nargs='?',
-                        dest='ip',
-                        help='ip-address of the Niko Home Control system to connect to. ')
-    parser.add_argument('--port',
-                        nargs='?', default=nhcconnection.NHC_TCP_PORT,
-                        dest='port',
-                        help='port of the Niko Home Control system to connect to. '
-                             'Default: %s' % nhcconnection.NHC_TCP_PORT)
-    args = parser.parse_args()
-    return args
+    def stop_listener(self):
+        self._listen_task.cancel()
 
+async def callback(event):
+    print(event.type)
+    print(event.id)
+    print(event.value1)
 
-def _listen(arguments):
-    listen(ip=arguments.ip, port=arguments.port)
+async def main():
+    mon = await NikoHomeControlMonitor.create(ip='192.168.4.6', port=8000)
+    mon.add_callback(callback)
+    mon.start_listener()
 
+    await asyncio.sleep(10)
+    mon.stop_listener()
 
-def main():
-    _listen(_get_cli_arguments())
-
-
-if __name__ == '__main__':
-    main()
+asyncio.run(main())
